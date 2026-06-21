@@ -55,10 +55,41 @@ export interface Preferences {
 // How much harder than your current level you want to push.
 export type Stretch = "same" | "step-up" | "reach";
 
-export interface DataStore {
-  pieces: Piece[];
-  deepDives: Record<string, DeepDive>; // keyed by piece id
-  preferences: Preferences;
+// One piece touched in a session. pieceId is null when the mentioned piece
+// isn't in the repertoire (or was later deleted); title always carries a label.
+export interface SessionPiece {
+  pieceId: string | null;
+  title: string;
+}
+
+// A logged practice session — structured from a voice/typed reflection.
+export interface PracticeSession {
+  id: string;
+  date: string; // ISO date the practice happened (defaults to now)
+  durationMin: number | null; // minutes practiced, if known
+  pieces: SessionPiece[]; // pieces worked on (→ session_pieces rows)
+  focus: string[]; // what was worked on
+  struggles: string[]; // pain points / trouble spots
+  summary: string; // one-line recap
+  reflection: string; // the raw voice/typed reflection
+  dateAdded: string; // ISO timestamp the log was created
+}
+
+// What Claude extracts from a practice reflection.
+export interface StructuredSession {
+  durationMin: number | null;
+  pieces: SessionPiece[];
+  focus: string[];
+  struggles: string[];
+  summary: string;
+}
+
+// The coach's structured feedback over recent sessions.
+export interface Coaching {
+  headline: string;
+  observations: string[];
+  suggestions: string[];
+  nextGoal: string;
 }
 
 // Mode for the recommender.
