@@ -7,6 +7,7 @@ import type {
   Piece,
   PieceStatus,
   Recommendation,
+  RecommendationDetail,
   RecommendMode,
   Stretch,
 } from "@/lib/types";
@@ -867,6 +868,31 @@ function Recommend() {
 
 function RecCard({ rec }: { rec: Recommendation }) {
   const [state, setState] = useState<"idle" | "adding" | "added">("idle");
+  const [detail, setDetail] = useState<RecommendationDetail | null>(null);
+  const [detailState, setDetailState] = useState<"idle" | "loading" | "error">(
+    "idle",
+  );
+
+  async function getMoreInfo() {
+    if (detail) {
+      setDetail(null); // toggle closed
+      return;
+    }
+    setDetailState("loading");
+    try {
+      const res = await fetch("/api/recommend/detail", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ rec }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "Failed");
+      setDetail(data.detail);
+      setDetailState("idle");
+    } catch {
+      setDetailState("error");
+    }
+  }
 
   async function addToWant() {
     if (state !== "idle") return;
@@ -908,8 +934,19 @@ function RecCard({ rec }: { rec: Recommendation }) {
         <span className="font-semibold text-henle">New challenge: </span>
         {rec.newChallenge}
       </p>
-      <div className="mt-3 flex items-center gap-4">
+      <div className="mt-3 flex flex-wrap items-center gap-4">
         <ListenLink title={rec.title} composer={rec.composer} />
+        <button
+          onClick={getMoreInfo}
+          disabled={detailState === "loading"}
+          className="text-sm font-medium text-henle hover:text-henle-dark"
+        >
+          {detailState === "loading"
+            ? "Loading…"
+            : detail
+              ? "Hide info"
+              : "Get more info"}
+        </button>
         <button
           onClick={addToWant}
           disabled={state !== "idle"}
@@ -926,6 +963,17 @@ function RecCard({ rec }: { rec: Recommendation }) {
               : "+ Add to want-to-learn"}
         </button>
       </div>
+
+      {detailState === "error" && (
+        <p className="mt-2 text-sm text-red-600">Couldn&apos;t load more info.</p>
+      )}
+      {detail && (
+        <div className="mt-3 space-y-3 border-t border-stone-100 pt-3 text-sm text-stone-700">
+          <Section title="Why it fits you">{detail.fit}</Section>
+          <Section title="The challenge">{detail.challenge}</Section>
+          <Section title="How to approach it">{detail.approach}</Section>
+        </div>
+      )}
     </div>
   );
 }

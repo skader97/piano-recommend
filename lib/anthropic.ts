@@ -11,12 +11,14 @@ import type {
   Era,
   Piece,
   Recommendation,
+  RecommendationDetail,
   RecommendMode,
   Stretch,
 } from "./types";
 import { ERAS } from "./types";
 
-const MODEL = "claude-opus-4-8";
+// Fast tier — recommendations/identify/deep-dives prioritize speed here.
+const MODEL = "claude-haiku-4-5";
 
 // The SDK reads ANTHROPIC_API_KEY from the environment (.env.local in dev).
 const client = new Anthropic();
@@ -129,7 +131,6 @@ export async function generateDeepDive(
   const message = await client.messages.create({
     model: MODEL,
     max_tokens: 2048,
-    thinking: { type: "adaptive" },
     system:
       "You help a pianist understand a piece they're playing. Be specific and " +
       "substantive, never padded or fawning. Write for a curious adult amateur.\n" +
@@ -222,13 +223,13 @@ export async function recommend(
   const message = await client.messages.create({
     model: MODEL,
     max_tokens: 4096,
-    thinking: { type: "adaptive" },
     system:
       "You are a thoughtful piano teacher recommending new repertoire. Recommend exactly 3 pieces. " +
       "Anchor difficulty to the Henle 1–9 scale. `form` is the genre in one or two words " +
       "(Nocturne, Ballade, Sonata, Étude...). For each: `why` ties it specifically to " +
       "their existing repertoire (name a piece or pattern you're drawing on); `newChallenge` " +
-      "names the concrete new skill or idea it introduces. Be specific and honest — no " +
+      "names the concrete new skill or idea it introduces. Keep BOTH `why` and `newChallenge` " +
+      "to ONE short line each — max ~15 words, no full paragraphs. Specific and honest, no " +
       "generic praise, no padding. Don't recommend pieces already in their repertoire.\n\n" +
       modeGuidance +
       "\n" +
@@ -244,4 +245,47 @@ export async function recommend(
     },
   });
   return parseJson<{ recommendations: Recommendation[] }>(message).recommendations;
+}
+
+// --- 4. On-demand detail for a single recommendation --------------------
+
+const DETAIL_SCHEMA = {
+  type: "object",
+  properties: {
+    fit: { type: "string" },
+    challenge: { type: "string" },
+    approach: { type: "string" },
+  },
+  required: ["fit", "challenge", "approach"],
+  additionalProperties: false,
+};
+
+export async function recommendationDetail(
+  rec: Recommendation,
+  pieces: Piece[],
+): Promise<RecommendationDetail> {
+  const repertoire = pieces.length
+    ? pieces.map((p) => `- ${p.title} — ${p.composer} (Henle ${p.henle ?? "?"})`).join("\n")
+    : "(no pieces yet)";
+
+  const message = await client.messages.create({
+    model: MODEL,
+    max_tokens: 1024,
+    system:
+      "You are a thoughtful piano teacher. The pianist wants a fuller explanation of one " +
+      "recommended piece. Give 2–3 substantive sentences for each field, specific and honest:\n" +
+      "- fit: why it suits THEM, referencing their actual repertoire.\n" +
+      "- challenge: the concrete musical/technical growth it offers.\n" +
+      "- approach: practical advice on how to start learning it.",
+    messages: [
+      {
+        role: "user",
+        content: `Their repertoire:\n${repertoire}\n\nThe recommended piece: ${rec.title} — ${rec.composer} (Henle ${rec.henle ?? "?"}).\nTell me more.`,
+      },
+    ],
+    output_config: {
+      format: { type: "json_schema", schema: DETAIL_SCHEMA },
+    },
+  });
+  return parseJson<RecommendationDetail>(message);
 }

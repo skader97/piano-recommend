@@ -101,6 +101,13 @@ export interface Recommendation {
   era: Era;
   form: string; // so it can be added straight to the repertoire
   henle: Henle | null;
-  why: string; // why this fits you specifically
-  newChallenge: string; // the new skill/idea it introduces
+  why: string; // short: why this fits you (one line)
+  newChallenge: string; // short: the new skill/idea (one line)
+}
+
+// On-demand deeper explanation for a single recommendation ("Get more info").
+export interface RecommendationDetail {
+  fit: string; // why it suits you, tied to your repertoire
+  challenge: string; // the musical/technical growth it offers
+  approach: string; // how to start learning it
 }
