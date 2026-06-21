@@ -39,3 +39,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# self-contained npm cache (kept inside the project, machine-specific)
+/.npm-cache
+.npmrc
+
+# personal data store (your repertoire) — never commit
+/data.json

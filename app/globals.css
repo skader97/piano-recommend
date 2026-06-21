@@ -1,26 +1,48 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* Henle Urtext palette — the iconic deep blue + ivory paper. */
+  --color-henle: #14346b;
+  --color-henle-dark: #0e264d;
+  --color-henle-mid: #2a4d8f;
+  --color-henle-light: #e8eef7;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  /* Ivory edition paper. */
+  background: #f4f1ea;
+  color: #1c1917;
+}
+
+/* Slot-machine reel spin: a strip of glyphs scrolling vertically. The strip
+   holds two copies of the glyph set, so translating -50% loops seamlessly. */
+@keyframes reel-spin {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-50%);
+  }
+}
+.reel-strip {
+  animation: reel-spin 0.3s linear infinite;
+}
+
+/* The lever kick when you spin. */
+@keyframes lever-pull {
+  0% {
+    transform: rotate(0);
+  }
+  35% {
+    transform: rotate(28deg);
+  }
+  100% {
+    transform: rotate(0);
+  }
+}
+.lever-pull {
+  animation: lever-pull 0.55s ease-out;
 }
