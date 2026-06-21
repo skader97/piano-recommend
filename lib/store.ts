@@ -16,9 +16,17 @@ import type {
 } from "./types";
 
 function db() {
-  // The Neon/Vercel integration sets both names; accept either.
-  const url = process.env.DATABASE_URL ?? process.env.POSTGRES_URL;
-  if (!url) throw new Error("DATABASE_URL is not set");
+  // The Neon/Vercel integration populates several of these; pick the first that
+  // actually has a value (some may exist but be empty strings).
+  const url = [
+    process.env.DATABASE_URL,
+    process.env.POSTGRES_URL,
+    process.env.DATABASE_URL_UNPOOLED,
+    process.env.POSTGRES_URL_NON_POOLING,
+  ].find((u) => u && u.trim().length > 0);
+  if (!url) {
+    throw new Error("No Postgres connection string set (DATABASE_URL / POSTGRES_URL)");
+  }
   return neon(url);
 }
 
