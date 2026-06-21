@@ -44,5 +44,5 @@ next-env.d.ts
 /.npm-cache
 .npmrc
 
-# personal data store (your repertoire) — never commit
-/data.json
+# NOTE: data.json (your repertoire) is intentionally tracked so it's backed up
+# to your private repo. It's just piano pieces, not secrets.

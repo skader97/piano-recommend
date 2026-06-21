@@ -1,0 +1,336 @@
+{
+  "pieces": [
+    {
+      "rawInput": "Chopin Nocturne Op. 9 No. 2",
+      "status": "playing",
+      "title": "Nocturne in E-flat major, Op. 9 No. 2",
+      "composer": "Frédéric Chopin",
+      "era": "Romantic",
+      "form": "Nocturne",
+      "henle": 6,
+      "id": "940b308b-eb71-4bba-bb16-985c5f0bb774",
+      "dateAdded": "2026-06-21T16:43:59.363Z",
+      "yearLearned": null
+    },
+    {
+      "rawInput": "Chopin nocturne op 9 no 1",
+      "status": "playing",
+      "title": "Nocturne in B-flat minor, Op. 9 No. 1",
+      "composer": "Frédéric Chopin",
+      "era": "Romantic",
+      "form": "Nocturne",
+      "henle": 7,
+      "id": "e473b366-5bc3-4eda-84b0-ea70be93e1ba",
+      "dateAdded": "2026-06-21T16:44:24.041Z",
+      "yearLearned": null
+    },
+    {
+      "rawInput": "Chopin ballade no 1",
+      "status": "playing",
+      "title": "Ballade No. 1 in G minor, Op. 23",
+      "composer": "Frédéric Chopin",
+      "era": "Romantic",
+      "form": "Ballade",
+      "henle": 8,
+      "id": "75008d04-3759-4ddc-8c8c-e2e967709743",
+      "dateAdded": "2026-06-21T16:44:30.180Z",
+      "yearLearned": null
+    },
+    {
+      "rawInput": "chopin ballade no 2",
+      "status": "playing",
+      "title": "Ballade No. 2 in F major, Op. 38",
+      "composer": "Frédéric Chopin",
+      "era": "Romantic",
+      "form": "Ballade",
+      "henle": 8,
+      "id": "c260d075-3054-479c-93d6-ad6341a2e619",
+      "dateAdded": "2026-06-21T16:44:48.611Z",
+      "yearLearned": null
+    },
+    {
+      "rawInput": "chopin ballade no 3",
+      "status": "playing",
+      "title": "Ballade No. 3 in A-flat major, Op. 47",
+      "composer": "Frédéric Chopin",
+      "era": "Romantic",
+      "form": "Ballade",
+      "henle": 8,
+      "id": "863568c4-f491-4f9c-908d-d0f52b27d6fb",
+      "dateAdded": "2026-06-21T16:44:57.008Z",
+      "yearLearned": null
+    },
+    {
+      "rawInput": "Chopin ballade no 4",
+      "status": "playing",
+      "title": "Ballade No. 4 in F minor, Op. 52",
+      "composer": "Frédéric Chopin",
+      "era": "Romantic",
+      "form": "Ballade",
+      "henle": 9,
+      "id": "49ba7dce-da02-4663-8cf1-f5b4bed59674",
+      "dateAdded": "2026-06-21T16:45:02.437Z",
+      "yearLearned": null
+    },
+    {
+      "rawInput": "Chopin nocturne in c minor",
+      "status": "playing",
+      "title": "Nocturne in C minor, Op. 48 No. 1",
+      "composer": "Frédéric Chopin",
+      "era": "Romantic",
+      "form": "Nocturne",
+      "henle": 7,
+      "id": "0e279ea7-4710-4f30-b285-6e1f0909e040",
+      "dateAdded": "2026-06-21T16:45:10.010Z",
+      "yearLearned": null
+    },
+    {
+      "rawInput": "Chopin nocturne in c sharp minor (the one right before c minor)",
+      "status": "playing",
+      "title": "Nocturne in C-sharp minor, Op. 27 No. 1",
+      "composer": "Frédéric Chopin",
+      "era": "Romantic",
+      "form": "Nocturne",
+      "henle": 7,
+      "id": "307ffab4-b31c-4c33-822b-14edc9c4b84f",
+      "dateAdded": "2026-06-21T16:45:22.197Z",
+      "yearLearned": null
+    },
+    {
+      "rawInput": "Chopin nocturne in d flat major",
+      "status": "playing",
+      "title": "Nocturne in D-flat major, Op. 27 No. 2",
+      "composer": "Frédéric Chopin",
+      "era": "Romantic",
+      "form": "Nocturne",
+      "henle": 7,
+      "id": "e0651112-bc53-4187-a672-20b6b4d9f6f1",
+      "dateAdded": "2026-06-21T16:45:29.780Z",
+      "yearLearned": 2017
+    },
+    {
+      "rawInput": "chopin nocturne in e minor",
+      "status": "playing",
+      "title": "Nocturne in E minor, Op. 72 No. 1",
+      "composer": "Frédéric Chopin",
+      "era": "Romantic",
+      "form": "Nocturne",
+      "henle": 6,
+      "id": "5a58ecdb-a227-4cb5-84ea-5f9b31ec5da9",
+      "dateAdded": "2026-06-21T16:45:34.611Z",
+      "yearLearned": 2014
+    },
+    {
+      "rawInput": "Sonata pathetique movement 1",
+      "status": "playing",
+      "title": "Piano Sonata No. 8 in C minor, Op. 13 \"Pathétique\" - I. Grave – Allegro di molto e con brio",
+      "composer": "Ludwig van Beethoven",
+      "era": "Classical",
+      "form": "Sonata",
+      "henle": 6,
+      "id": "2725c492-564d-40b5-a8e9-70b148c52285",
+      "dateAdded": "2026-06-21T16:46:13.044Z",
+      "yearLearned": 2017
+    },
+    {
+      "rawInput": "Beethoven sonata pathetique movement 3",
+      "status": "playing",
+      "title": "Piano Sonata No. 8 in C minor, Op. 13 \"Pathétique\" - III. Rondo: Allegro",
+      "composer": "Ludwig van Beethoven",
+      "era": "Classical",
+      "form": "Sonata",
+      "henle": 6,
+      "id": "4a37ff21-7304-417f-a19b-faeebee39909",
+      "dateAdded": "2026-06-21T16:46:22.604Z",
+      "yearLearned": 2018
+    },
+    {
+      "rawInput": "beethoven tempest movement 3",
+      "status": "playing",
+      "title": "Piano Sonata No. 17 in D minor, Op. 31 No. 2 \"Tempest\", III. Allegretto",
+      "composer": "Ludwig van Beethoven",
+      "era": "Classical",
+      "form": "Sonata",
+      "henle": 6,
+      "id": "d52cf7c8-527e-46db-a048-d91217a783bc",
+      "dateAdded": "2026-06-21T16:47:27.951Z",
+      "yearLearned": 2013
+    },
+    {
+      "rawInput": "Rachmaninoff elegie",
+      "status": "playing",
+      "title": "Élégie in E-flat minor, Op. 3 No. 1",
+      "composer": "Sergei Rachmaninoff",
+      "era": "Romantic",
+      "form": "Élégie",
+      "henle": 6,
+      "id": "e26b4a00-e2bf-4254-b8e0-613d7340b403",
+      "dateAdded": "2026-06-21T16:48:14.954Z",
+      "yearLearned": 2022
+    },
+    {
+      "rawInput": "rachmaninoff prelude d major",
+      "status": "playing",
+      "title": "Prelude in D major, Op. 23 No. 4",
+      "composer": "Sergei Rachmaninoff",
+      "era": "Romantic",
+      "form": "Prelude",
+      "henle": 7,
+      "id": "92a6bbe7-bfdc-4a1b-8ec4-1b208102f625",
+      "dateAdded": "2026-06-21T16:48:31.027Z",
+      "yearLearned": 2018
+    },
+    {
+      "rawInput": "claire du lune,",
+      "status": "playing",
+      "title": "Clair de lune (from Suite bergamasque)",
+      "composer": "Claude Debussy",
+      "era": "Impressionist",
+      "form": "Character piece",
+      "henle": 6,
+      "id": "a65af547-a217-477d-9e5e-7cf9d79e8ef9",
+      "dateAdded": "2026-06-21T16:50:39.947Z",
+      "yearLearned": 2024
+    },
+    {
+      "rawInput": "rachmaninoff c sharp minor prelude",
+      "status": "playing",
+      "title": "Prelude in C-sharp minor, Op. 3 No. 2",
+      "composer": "Sergei Rachmaninoff",
+      "era": "Romantic",
+      "form": "Prelude",
+      "henle": 7,
+      "id": "895e7a7f-35d8-4bbf-9d9a-577780a859da",
+      "dateAdded": "2026-06-21T16:51:08.618Z",
+      "yearLearned": null
+    },
+    {
+      "rawInput": "bach english suite in a minor",
+      "status": "playing",
+      "title": "English Suite No. 2 in A minor, BWV 807",
+      "composer": "Johann Sebastian Bach",
+      "era": "Baroque",
+      "form": "Suite",
+      "henle": 7,
+      "id": "4674237c-12bc-4aa0-805e-ac64938a50b9",
+      "dateAdded": "2026-06-21T16:51:59.101Z",
+      "yearLearned": 2014
+    },
+    {
+      "rawInput": "mendelsohn rondo capricioso",
+      "status": "playing",
+      "title": "Rondo capriccioso in E major, Op. 14",
+      "composer": "Felix Mendelssohn",
+      "era": "Romantic",
+      "form": "Rondo",
+      "henle": 7,
+      "id": "d3320ac8-d276-4cc6-9cd5-8284e3230312",
+      "dateAdded": "2026-06-21T16:52:48.965Z",
+      "yearLearned": 2014
+    },
+    {
+      "rawInput": "moonlight sonata movements 1 and 3 beethoven",
+      "status": "playing",
+      "title": "Piano Sonata No. 14 in C-sharp minor, Op. 27 No. 2 \"Moonlight\", I. Adagio sostenuto",
+      "composer": "Ludwig van Beethoven",
+      "era": "Classical",
+      "form": "Sonata",
+      "henle": 4,
+      "id": "af20e725-d924-4abb-a284-10eb02ee56fb",
+      "dateAdded": "2026-06-21T16:54:02.494Z",
+      "yearLearned": 2010
+    },
+    {
+      "rawInput": "moonlight sonata movements 1 and 3 beethoven",
+      "status": "playing",
+      "title": "Piano Sonata No. 14 in C-sharp minor, Op. 27 No. 2 \"Moonlight\", III. Presto agitato",
+      "composer": "Ludwig van Beethoven",
+      "era": "Classical",
+      "form": "Sonata",
+      "henle": 7,
+      "id": "c68315ff-7690-4651-982e-b74c31835f31",
+      "dateAdded": "2026-06-21T16:54:02.498Z",
+      "yearLearned": 2014
+    },
+    {
+      "rawInput": "Chopin Etude Op. 10 No. 3",
+      "status": "playing",
+      "yearLearned": 2017,
+      "title": "Étude in E major, Op. 10 No. 3 \"Tristesse\"",
+      "composer": "Frédéric Chopin",
+      "era": "Romantic",
+      "form": "Étude",
+      "henle": 7,
+      "id": "88cda0d1-dd40-4797-9a6d-74fc573188a4",
+      "dateAdded": "2026-06-21T16:55:24.007Z"
+    },
+    {
+      "rawInput": "sonata in f minor beethoven no 1",
+      "status": "playing",
+      "yearLearned": null,
+      "title": "Piano Sonata No. 1 in F minor, Op. 2 No. 1",
+      "composer": "Ludwig van Beethoven",
+      "era": "Classical",
+      "form": "Sonata",
+      "henle": 6,
+      "id": "1f843435-841f-4928-9b0f-5884e20124c3",
+      "dateAdded": "2026-06-21T16:55:40.484Z"
+    },
+    {
+      "rawInput": "scriabin impromptu b flat minor",
+      "status": "learning",
+      "yearLearned": 2024,
+      "title": "Impromptu in B-flat minor, Op. 10 No. 1",
+      "composer": "Alexander Scriabin",
+      "era": "Romantic",
+      "form": "Impromptu",
+      "henle": 6,
+      "id": "38321cff-8e59-4395-aebc-21548172b3cd",
+      "dateAdded": "2026-06-21T17:00:48.710Z"
+    }
+  ],
+  "deepDives": {
+    "940b308b-eb71-4bba-bb16-985c5f0bb774": {
+      "composer": "Frédéric Chopin (1810–1849) was a Polish-French composer and pianist who wrote almost exclusively for the piano. He's central to the Romantic era for treating the instrument as a singing voice, drawing on Italian bel canto opera and the rubato of folk music. His harmonic language—chromatic inner voices, daring modulations, long-breathed melodic lines—reshaped what the piano could express. He performed rarely in public, preferring the intimacy of the salon.",
+      "pieceStory": "This nocturne comes from a set of three (Op. 9) published in 1832, written when Chopin was around 20 and newly arrived in Paris. It's dedicated to Marie Pleyel and quickly became one of his most popular pieces—so much so that Chopin reportedly grew tired of being asked to play it. It's modeled closely on the style of John Field, but Chopin's ornamentation and harmonic richness go well beyond his model.",
+      "formExplainer": "A nocturne ('night piece') is a lyrical character piece evoking the mood of evening or night. The genre was essentially invented by the Irish composer John Field in the early 1800s, who paired a singing right-hand melody with a rolling, pedaled left-hand accompaniment—imitating the texture of operatic aria over orchestra. Chopin inherited this format and elevated it, adding florid embellishment, bolder harmony, and emotional depth. The form is typically not strict; many nocturnes loosely repeat a main theme with increasingly elaborate decoration.",
+      "theoryTidbits": [
+        "The structure is a recurring theme (A-A-B-A-B-A type return) where Chopin ornaments the melody differently each time it returns—watch how the same tune gets progressively more decorated with grace notes and runs.",
+        "The left hand spans wide intervals in a steady 12/8 lilt; keep it soft and pedaled so it functions as a 'harp' under the voice, never competing with the melody.",
+        "Notice the cadenza-like flourishes, especially the famous unmeasured run near the end—these are written-out improvisations and should sound spontaneous, not metronomic.",
+        "The coda turns toward the subdominant and includes a striking 'al fine' phrase marked with a fermata before the final cadence—a moment of suspended time before resolution."
+      ],
+      "listenFor": "Listen for how the pianist shapes rubato—stretching and compressing the melody while the left hand keeps a steady pulse underneath, so the line breathes like a singer without the accompaniment dragging.",
+      "generatedAt": "2026-06-21T16:45:07.373Z"
+    },
+    "895e7a7f-35d8-4bbf-9d9a-577780a859da": {
+      "composer": "Sergei Rachmaninoff (1873–1943) was a Russian composer, pianist, and conductor — one of the last great Romantics writing well into the 20th century, when modernism was already dominant. His music is defined by long-breathed melodies, dense chordal textures, and a melancholic gravity rooted in Russian Orthodox chant and bell sounds. He was also one of history's greatest pianists, with famously enormous hands, which shaped the wide-spanning chords throughout his writing. His harmonic language stays tonal and lush even as his contemporaries moved away from it.",
+      "pieceStory": "Rachmaninoff wrote this prelude in 1892, at age 19, just after graduating from the Moscow Conservatory, as part of his Op. 3 set 'Morceaux de fantaisie.' He premiered it himself that year, and it became an overnight sensation — so popular that audiences demanded it everywhere he played for the rest of his life. He grew to resent it, calling it 'It' because crowds shouted for it constantly, and he earned almost nothing from it due to weak copyright protection. The famous opening three-note motif (A–G-sharp–C-sharp) is often heard as tolling bells, evoking the bells of Moscow that fascinated him.",
+      "formExplainer": "A prelude was originally an introductory piece — improvisatory music to set the key before a larger work, as in Bach's preludes paired with fugues. By the Romantic era, Chopin liberated the prelude into a standalone character piece: a short, self-contained mood study, often one per key. Rachmaninoff inherited this tradition and, like Chopin and Scriabin, eventually wrote a prelude in all 24 keys (across Op. 3, Op. 23, and Op. 32). So a Romantic prelude is less a 'beginning' than a concentrated emotional snapshot.",
+      "theoryTidbits": [
+        "The three-note bell motif (A–G-sharp–C-sharp) saturates the whole piece — notice how it returns in the bass, the inner voices, and finally thunders in massive chords at the climax. Track it everywhere.",
+        "The middle section (Agitato) shifts to triplet figuration and rising chromatic sequences — the tempo and texture change dramatically while the harmonic tension builds toward the return.",
+        "The reprise brings the opening theme back in four-stave, fortississimo chords split between the hands — voice the top melody and the bass tolling notes so the texture doesn't become an undifferentiated wall of sound.",
+        "The coda dissolves the tension with descending chromatic motion, settling onto a quiet C-sharp major-tinged close that resolves the darkness."
+      ],
+      "listenFor": "Listen for how a great pianist paces the dynamic arc — keeping the opening genuinely soft and ominous so the giant chordal climax actually overwhelms, rather than playing loud too early and leaving nowhere to go.",
+      "generatedAt": "2026-06-21T16:51:54.593Z"
+    },
+    "4674237c-12bc-4aa0-805e-ac64938a50b9": {
+      "composer": "Johann Sebastian Bach (1685–1750) was a German organist and composer who synthesized the contrapuntal and dance traditions of his era into music of extraordinary structural depth. He spent his career in church and court positions—Weimar, Köthen, and finally Leipzig—writing for keyboard, voice, and instrumental ensemble. His genius lay in treating counterpoint not as academic exercise but as expressive engine, weaving independent voices into coherent emotional wholes. The English Suites likely date from his Köthen years, a period rich in secular instrumental writing.",
+      "pieceStory": "The English Suites were composed around 1715–1720, probably during or just before Bach's tenure at Köthen, and they are the earliest of his three great keyboard suite sets (before the French Suites and Partitas). The 'English' label is misleading and not Bach's own—an early annotation claimed they were 'made for an Englishman,' but their style is thoroughly French and Italian. What sets them apart from the French Suites is that each opens with a substantial Prelude; No. 2's Prelude is a large, concerto-like movement with ritornello structure. The A minor suite is among the most popular, prized for its driving energy and the expressive depth of its Sarabande.",
+      "formExplainer": "A Baroque suite is a collection of stylized dance movements in a single key, descended from the practice of pairing contrasting dances for courtly entertainment. By Bach's time a standard core had crystallized: Allemande (moderate, German), Courante (faster, flowing), Sarabande (slow, stately, Spanish-derived with a characteristic emphasis on the second beat), and Gigue (lively, often fugal, English/Irish in origin). Between the Sarabande and Gigue composers inserted optional 'galanteries'—here a pair of Bourrées. The dances are stylized, meaning they're meant for listening rather than dancing, but they retain each dance's signature tempo, meter, and rhythmic character.",
+      "theoryTidbits": [
+        "The Prelude isn't a free improvisation but a tightly organized ritornello form borrowed from the Italian concerto—listen for the opening material returning in different keys as a structural pillar between episodes.",
+        "The Sarabande emphasizes beat two of each bar; feel that weighted second beat, and notice how Bach later provides an ornamented written-out repeat (les agréments) showing exactly how he wanted it embellished.",
+        "Bourrée I is in A minor and Bourrée II shifts to A major—the parallel-key contrast brightens the texture, and Bourrée I returns da capo to frame the pair.",
+        "The Gigue is fugal: the second half typically inverts or restates the subject, so track the entry of the theme across voices as the texture thickens."
+      ],
+      "listenFor": "Listen for how a great player differentiates the touch and articulation between movements—the singing legato of the Sarabande against the crisp, detached attack of the Bourrées and Gigue—so each dance keeps its distinct physical character rather than blurring into uniform fast playing.",
+      "generatedAt": "2026-06-21T17:23:24.935Z"
+    }
+  },
+  "preferences": {
+    "defaultStretch": "step-up"
+  }
+}
