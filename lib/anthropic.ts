@@ -7,9 +7,11 @@
 // (output_config.format) so responses come back schema-valid — no brittle parsing.
 import Anthropic from "@anthropic-ai/sdk";
 import type {
+  Coaching,
   DeepDive,
   Era,
   Piece,
+  PracticeSession,
   Recommendation,
   RecommendationDetail,
   RecommendMode,
@@ -288,4 +290,58 @@ export async function recommendationDetail(
     },
   });
   return parseJson<RecommendationDetail>(message);
+}
+
+// --- 5. Practice logging: structure a reflection ------------------------
+
+// --- 5. Practice coaching over recent sessions --------------------------
+
+const COACH_SCHEMA = {
+  type: "object",
+  properties: {
+    headline: { type: "string" },
+    observations: { type: "array", items: { type: "string" } },
+    suggestions: { type: "array", items: { type: "string" } },
+    nextGoal: { type: "string" },
+  },
+  required: ["headline", "observations", "suggestions", "nextGoal"],
+  additionalProperties: false,
+};
+
+// Read recent practice sessions and coach like a thoughtful teacher would —
+// spotting patterns across sessions, not just reacting to the last one.
+export async function generateCoaching(
+  sessions: PracticeSession[],
+): Promise<Coaching> {
+  const recent = sessions.slice(0, 20); // already newest-first
+  // Sessions are stored as raw reflections (no per-save structuring), so the
+  // coach reads what the pianist actually said and finds the patterns itself.
+  const log = recent
+    .map((s) => `- ${s.date.slice(0, 10)}: ${s.reflection}`)
+    .join("\n");
+
+  const message = await client.messages.create({
+    model: MODEL,
+    max_tokens: 1024,
+    system:
+      "You are a perceptive piano coach reviewing a student's recent practice log. " +
+      "Look ACROSS sessions for patterns — recurring trouble spots, pieces stalling " +
+      "or progressing, neglected repertoire, lopsided time. Be specific and warm, " +
+      "never generic or fawning.\n" +
+      "- headline: one encouraging but honest line summarizing where they are.\n" +
+      "- observations: 2–4 concrete patterns you notice across the sessions.\n" +
+      "- suggestions: 2–4 specific, actionable things to try next.\n" +
+      "- nextGoal: one focused goal for the coming week.",
+    messages: [
+      {
+        role: "user",
+        content: `My recent practice sessions (newest first):\n${log}\n\nCoach me.`,
+      },
+    ],
+    output_config: {
+      format: { type: "json_schema", schema: COACH_SCHEMA },
+    },
+  });
+
+  return parseJson<Coaching>(message);
 }

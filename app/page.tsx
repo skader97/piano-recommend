@@ -3,9 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 import { ERAS } from "@/lib/types";
 import type {
+  Coaching,
   DeepDive,
   Piece,
   PieceStatus,
+  PracticeSession,
   Recommendation,
   RecommendationDetail,
   RecommendMode,
@@ -71,7 +73,9 @@ function ListenLink({
 }
 
 export default function Home() {
-  const [tab, setTab] = useState<"repertoire" | "recommend">("repertoire");
+  const [tab, setTab] = useState<"repertoire" | "recommend" | "practice">(
+    "repertoire",
+  );
 
   return (
     <main className="mx-auto w-full max-w-3xl flex-1 px-5 py-10">
@@ -107,10 +111,19 @@ export default function Home() {
           <TabButton active={tab === "recommend"} onClick={() => setTab("recommend")}>
             What to learn next
           </TabButton>
+          <TabButton active={tab === "practice"} onClick={() => setTab("practice")}>
+            Practice log
+          </TabButton>
         </div>
       </nav>
 
-      {tab === "repertoire" ? <Repertoire /> : <Recommend />}
+      {tab === "repertoire" ? (
+        <Repertoire />
+      ) : tab === "recommend" ? (
+        <Recommend />
+      ) : (
+        <Practice />
+      )}
     </main>
   );
 }
@@ -1084,5 +1097,355 @@ function Reel({
       {/* center payline */}
       <div className="pointer-events-none absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-henle/10" />
     </div>
+  );
+}
+
+// --- Practice log surface -------------------------------------------------
+
+// Browser dictation via the Web Speech API. Audio is transcribed on-device and
+// never leaves the browser — we only ever keep the resulting text.
+function useDictation(onAppend: (text: string) => void) {
+  const [listening, setListening] = useState(false);
+  const [supported, setSupported] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const recRef = useRef<any>(null);
+
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    setSupported(Boolean(SR));
+    return () => recRef.current?.stop?.();
+  }, []);
+
+  function toggle() {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SR) return;
+    if (listening) {
+      recRef.current?.stop();
+      return;
+    }
+    const rec = new SR();
+    rec.lang = "en-US";
+    rec.continuous = true;
+    rec.interimResults = false;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    rec.onresult = (e: any) => {
+      let txt = "";
+      for (let i = e.resultIndex; i < e.results.length; i++) {
+        txt += e.results[i][0].transcript;
+      }
+      if (txt.trim()) onAppend(txt.trim());
+    };
+    rec.onend = () => setListening(false);
+    rec.onerror = () => setListening(false);
+    recRef.current = rec;
+    rec.start();
+    setListening(true);
+  }
+
+  return { listening, supported, toggle };
+}
+
+function Practice() {
+  const [sessions, setSessions] = useState<PracticeSession[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [reflection, setReflection] = useState("");
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const { listening, supported, toggle } = useDictation((text) =>
+    setReflection((prev) => (prev ? `${prev} ${text}` : text)),
+  );
+
+  useEffect(() => {
+    fetch("/api/sessions")
+      .then((r) => r.json())
+      .then((d) => setSessions(d.sessions ?? []))
+      .finally(() => setLoading(false));
+  }, []);
+
+  async function logSession() {
+    const text = reflection.trim();
+    if (!text || saving) return;
+    if (listening) toggle();
+    setSaving(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/sessions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ reflection: text }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "Failed");
+      setSessions((prev) => [data.session, ...prev]);
+      setReflection("");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed");
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function remove(id: string) {
+    setSessions((prev) => prev.filter((s) => s.id !== id));
+    await fetch(`/api/sessions/${id}`, { method: "DELETE" });
+  }
+
+  return (
+    <div>
+      {/* Log box */}
+      <div className="paper-card spine mb-6 p-4 pl-5">
+        <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.15em] text-henle">
+          How did today&apos;s practice go?
+        </label>
+        <textarea
+          value={reflection}
+          onChange={(e) => setReflection(e.target.value)}
+          rows={3}
+          placeholder={
+            supported
+              ? "Tap the mic and talk, or type — e.g. “Practiced about 40 minutes, worked the Ballade coda, left-hand jumps still messy.”"
+              : "e.g. “Practiced about 40 minutes, worked the Ballade coda, left-hand jumps still messy.”"
+          }
+          className="field w-full resize-y px-3 py-2"
+        />
+        <div className="mt-3 flex flex-wrap items-center gap-3">
+          {supported && (
+            <button
+              onClick={toggle}
+              className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm font-medium transition-colors ${
+                listening
+                  ? "border-red-400 bg-red-50 text-red-600"
+                  : "border-line-strong text-henle hover:border-henle"
+              }`}
+            >
+              <span
+                className={`h-2.5 w-2.5 rounded-full ${
+                  listening ? "animate-pulse bg-red-500" : "bg-henle"
+                }`}
+              />
+              {listening ? "Listening… tap to stop" : "Speak"}
+            </button>
+          )}
+          <button
+            onClick={logSession}
+            disabled={saving || !reflection.trim()}
+            className="rounded-lg bg-henle px-4 py-2 font-medium text-white shadow-sm transition-colors hover:bg-henle-dark disabled:opacity-50"
+          >
+            {saving ? "Logging…" : "Log session"}
+          </button>
+          {!supported && (
+            <span className="text-xs text-muted">
+              Voice input isn&apos;t supported in this browser — type instead.
+            </span>
+          )}
+        </div>
+        <p className="mt-2 text-xs text-muted">
+          Spoken words are transcribed in your browser — no audio is recorded or
+          stored. Claude tidies it into duration, pieces, and trouble spots.
+        </p>
+        {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
+      </div>
+
+      {loading ? (
+        <p className="text-muted">Loading your practice log…</p>
+      ) : sessions.length === 0 ? (
+        <p className="rounded-lg border border-dashed border-line-strong bg-paper p-6 text-center text-muted">
+          No sessions yet. Log your first practice above.
+        </p>
+      ) : (
+        <>
+          <PracticeStats sessions={sessions} />
+          <CoachPanel count={sessions.length} />
+          <h3 className="mb-2 flex items-center gap-3 font-serif text-sm uppercase tracking-[0.15em] text-henle">
+            Recent sessions
+            <span className="h-px flex-1 bg-line-strong" />
+          </h3>
+          <ul className="space-y-3">
+            {sessions.map((s) => (
+              <SessionCard key={s.id} session={s} onRemove={remove} />
+            ))}
+          </ul>
+        </>
+      )}
+    </div>
+  );
+}
+
+function dayString(d: Date): string {
+  return d.toISOString().slice(0, 10);
+}
+
+// Consecutive days (ending today or yesterday) with at least one logged session.
+function computeStreak(sessions: PracticeSession[]): number {
+  const days = new Set(sessions.map((s) => s.date.slice(0, 10)));
+  if (days.size === 0) return 0;
+  const cursor = new Date();
+  if (!days.has(dayString(cursor))) {
+    cursor.setUTCDate(cursor.getUTCDate() - 1);
+    if (!days.has(dayString(cursor))) return 0;
+  }
+  let streak = 0;
+  while (days.has(dayString(cursor))) {
+    streak += 1;
+    cursor.setUTCDate(cursor.getUTCDate() - 1);
+  }
+  return streak;
+}
+
+function PracticeStats({ sessions }: { sessions: PracticeSession[] }) {
+  const streak = computeStreak(sessions);
+
+  const weekAgo = Date.now() - 7 * 24 * 3600 * 1000;
+  const weekCount = sessions.filter(
+    (s) => new Date(s.date).getTime() >= weekAgo,
+  ).length;
+
+  return (
+    <section className="mb-6 rounded-xl border border-henle/20 bg-henle-light/60 p-5">
+      <h2 className="mb-4 text-xs font-semibold uppercase tracking-[0.25em] text-henle">
+        Practice at a glance
+      </h2>
+      <div className="grid grid-cols-3 gap-3 text-center">
+        <Stat n={sessions.length} label="Sessions" big />
+        <div>
+          <div className="font-serif text-3xl text-henle">
+            {streak}
+            <span className="ml-0.5 text-base">🔥</span>
+          </div>
+          <div className="text-[11px] uppercase tracking-wide text-muted">
+            Day streak
+          </div>
+        </div>
+        <Stat n={weekCount} label="This week" />
+      </div>
+    </section>
+  );
+}
+
+function CoachPanel({ count }: { count: number }) {
+  const [coaching, setCoaching] = useState<Coaching | null>(null);
+  const [state, setState] = useState<"idle" | "loading" | "error">("idle");
+
+  // Re-coaching makes sense as sessions accumulate; reset when the count grows.
+  const lastCount = useRef(count);
+  useEffect(() => {
+    if (count !== lastCount.current) {
+      lastCount.current = count;
+      setCoaching(null);
+    }
+  }, [count]);
+
+  async function getCoaching() {
+    setState("loading");
+    try {
+      const res = await fetch("/api/coach", { method: "POST" });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "Failed");
+      setCoaching(data.coaching);
+      setState("idle");
+    } catch {
+      setState("error");
+    }
+  }
+
+  return (
+    <div className="mb-6 rounded-xl border-2 border-henle bg-gradient-to-b from-henle-mid to-henle p-5 text-white shadow-md">
+      <div className="flex items-center justify-between gap-3">
+        <div>
+          <h2 className="font-serif text-lg">Your coach</h2>
+          <p className="text-xs text-white/70">
+            Patterns across your recent sessions.
+          </p>
+        </div>
+        <button
+          onClick={getCoaching}
+          disabled={state === "loading"}
+          className="shrink-0 rounded-lg bg-white px-4 py-2 text-sm font-semibold text-henle shadow transition-transform hover:scale-[1.02] disabled:opacity-60"
+        >
+          {state === "loading"
+            ? "Thinking…"
+            : coaching
+              ? "Refresh"
+              : "Get coaching"}
+        </button>
+      </div>
+
+      {state === "error" && (
+        <p className="mt-3 text-sm text-red-100">
+          Couldn&apos;t generate coaching right now.
+        </p>
+      )}
+
+      {coaching && (
+        <div className="mt-4 space-y-3 border-t border-white/20 pt-4 text-sm">
+          <p className="font-serif text-base">{coaching.headline}</p>
+          <CoachList title="What I'm noticing" items={coaching.observations} />
+          <CoachList title="Try this" items={coaching.suggestions} />
+          <div>
+            <h4 className="text-xs font-semibold uppercase tracking-wide text-white/70">
+              This week&apos;s goal
+            </h4>
+            <p className="mt-1 text-white/95">{coaching.nextGoal}</p>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function CoachList({ title, items }: { title: string; items: string[] }) {
+  if (!items.length) return null;
+  return (
+    <div>
+      <h4 className="text-xs font-semibold uppercase tracking-wide text-white/70">
+        {title}
+      </h4>
+      <ul className="mt-1 list-disc space-y-1 pl-5 text-white/95 marker:text-white/50">
+        {items.map((t, i) => (
+          <li key={i}>{t}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function SessionCard({
+  session,
+  onRemove,
+}: {
+  session: PracticeSession;
+  onRemove: (id: string) => void;
+}) {
+  const date = new Date(session.date).toLocaleDateString(undefined, {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+  });
+  const time = new Date(session.date).toLocaleTimeString(undefined, {
+    hour: "numeric",
+    minute: "2-digit",
+  });
+
+  return (
+    <li className="paper-card spine p-4 pl-5">
+      <div className="flex items-start justify-between gap-3">
+        <p className="text-xs font-medium uppercase tracking-wide text-muted">
+          {date}
+          <Dot />
+          {time}
+        </p>
+        <button
+          onClick={() => onRemove(session.id)}
+          aria-label="Delete session"
+          className="shrink-0 rounded px-2 py-1 text-xs text-muted transition-colors hover:text-red-600"
+        >
+          ✕
+        </button>
+      </div>
+      <p className="mt-1.5 leading-relaxed text-ink">{session.reflection}</p>
+    </li>
   );
 }
