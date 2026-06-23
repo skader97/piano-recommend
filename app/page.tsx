@@ -24,6 +24,9 @@ const STRETCH_LABELS: Record<Stretch, string> = {
   reach: "Reach",
 };
 
+// Shared field styling (defined in globals.css), so every input/select matches.
+const FIELD = "field px-3 py-2";
+
 function henleLabel(henle: number | null): string {
   return henle ? `Henle ${henle}` : "Henle —";
 }
@@ -31,6 +34,11 @@ function henleLabel(henle: number | null): string {
 function surname(composer: string): string {
   const parts = composer.trim().split(/\s+/);
   return parts[parts.length - 1] || composer;
+}
+
+// A thin dot separator for meta rows.
+function Dot() {
+  return <span className="px-1.5 text-henle/40">·</span>;
 }
 
 // A YouTube search for the piece — reliable (top hits are real recordings) and
@@ -55,7 +63,7 @@ function ListenLink({
       href={youtubeUrl(title, composer)}
       target="_blank"
       rel="noopener noreferrer"
-      className={`inline-flex items-center gap-1 text-sm font-medium text-henle hover:text-henle-dark ${className}`}
+      className={`inline-flex items-center gap-1 text-sm font-medium text-henle transition-colors hover:text-henle-dark ${className}`}
     >
       <span aria-hidden>▶</span> Listen
     </a>
@@ -67,33 +75,39 @@ export default function Home() {
 
   return (
     <main className="mx-auto w-full max-w-3xl flex-1 px-5 py-10">
-      <header className="mb-8">
+      <header className="mb-9">
         {/* Header styled like a Henle Urtext edition cover. */}
-        <div className="mx-auto max-w-sm border-2 border-henle bg-henle-light px-6 py-5 text-center shadow-sm">
-          <p className="text-[10px] font-medium uppercase tracking-[0.35em] text-henle/70">
+        <div className="relative mx-auto max-w-sm bg-henle-light px-6 py-6 text-center shadow-sm ring-1 ring-henle/15">
+          {/* Double-rule frame, like the printed cover border. */}
+          <span className="pointer-events-none absolute inset-1.5 border border-henle/50" />
+          <span className="pointer-events-none absolute inset-[7px] border border-henle/20" />
+          <p className="relative text-[10px] font-medium uppercase tracking-[0.4em] text-henle/70">
             Piano
           </p>
-          <h1 className="font-serif text-5xl leading-none tracking-tight text-henle">
+          <h1 className="relative font-serif text-5xl leading-none tracking-tight text-henle">
             Urtext
           </h1>
-          <div className="mx-auto mt-2 h-px w-16 bg-henle/40" />
-          <p className="mt-2 text-[10px] font-medium uppercase tracking-[0.3em] text-henle/70">
+          <div className="relative mx-auto mt-2 h-px w-16 bg-henle/40" />
+          <p className="relative mt-2 text-[10px] font-medium uppercase tracking-[0.35em] text-henle/70">
             Repertoire Edition
           </p>
         </div>
-        <p className="mx-auto mt-3 max-w-md text-center text-sm text-stone-600">
+        <p className="mx-auto mt-4 max-w-md text-center text-sm text-muted">
           Remember your repertoire, study what you play, and discover what to
           learn next.
         </p>
       </header>
 
-      <nav className="mb-8 flex justify-center gap-1 border-b border-stone-200">
-        <TabButton active={tab === "repertoire"} onClick={() => setTab("repertoire")}>
-          My Repertoire
-        </TabButton>
-        <TabButton active={tab === "recommend"} onClick={() => setTab("recommend")}>
-          What to learn next
-        </TabButton>
+      {/* Segmented control — sits on its own paper strip. */}
+      <nav className="mb-8 flex justify-center">
+        <div className="inline-flex gap-1 rounded-full border border-line bg-paper p-1 shadow-sm">
+          <TabButton active={tab === "repertoire"} onClick={() => setTab("repertoire")}>
+            My Repertoire
+          </TabButton>
+          <TabButton active={tab === "recommend"} onClick={() => setTab("recommend")}>
+            What to learn next
+          </TabButton>
+        </div>
       </nav>
 
       {tab === "repertoire" ? <Repertoire /> : <Recommend />}
@@ -113,10 +127,10 @@ function TabButton({
   return (
     <button
       onClick={onClick}
-      className={`-mb-px border-b-2 px-4 py-2 text-sm font-medium transition-colors ${
+      className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
         active
-          ? "border-henle text-henle"
-          : "border-transparent text-stone-500 hover:text-stone-800"
+          ? "bg-henle text-white shadow-sm"
+          : "text-muted hover:bg-henle-light hover:text-henle"
       }`}
     >
       {children}
@@ -216,12 +230,12 @@ function Repertoire() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="e.g. Chopin Ballades 1–4, or Nocturne Op. 9 No. 2"
-            className="flex-1 rounded-md border border-stone-300 bg-white px-3 py-2 text-stone-900 outline-none focus:border-henle"
+            className={`${FIELD} flex-1`}
           />
           <select
             value={status}
             onChange={(e) => setStatus(e.target.value as PieceStatus)}
-            className="rounded-md border border-stone-300 bg-white px-3 py-2 text-stone-700 outline-none focus:border-henle"
+            className={`${FIELD} text-muted`}
           >
             {(Object.keys(STATUS_LABELS) as PieceStatus[]).map((s) => (
               <option key={s} value={s}>
@@ -235,17 +249,17 @@ function Repertoire() {
             inputMode="numeric"
             placeholder="Year"
             aria-label="Year learned (optional)"
-            className="w-20 rounded-md border border-stone-300 bg-white px-3 py-2 text-stone-700 outline-none focus:border-henle"
+            className={`${FIELD} w-20 text-muted`}
           />
           <button
             type="submit"
             disabled={adding || !input.trim()}
-            className="rounded-md bg-henle px-4 py-2 font-medium text-white transition-colors hover:bg-henle-dark disabled:opacity-50"
+            className="rounded-lg bg-henle px-4 py-2 font-medium text-white shadow-sm transition-colors hover:bg-henle-dark disabled:opacity-50"
           >
             {adding ? "Identifying…" : "Add"}
           </button>
         </div>
-        <p className="mt-2 text-xs text-stone-500">
+        <p className="mt-2 text-xs text-muted">
           Add several at once — &ldquo;Chopin nocturnes in D-flat and E
           major,&rdquo; &ldquo;Ballades 1–4,&rdquo; &ldquo;sonata movements
           1/3.&rdquo; Composer, era, form, and difficulty get filled in for you.
@@ -256,21 +270,21 @@ function Repertoire() {
       {!loading && pieces.length > 0 && <RepertoireStats pieces={pieces} />}
 
       {loading ? (
-        <p className="text-stone-500">Loading your repertoire…</p>
+        <p className="text-muted">Loading your repertoire…</p>
       ) : pieces.length === 0 ? (
-        <p className="rounded-md border border-dashed border-stone-300 p-6 text-center text-stone-500">
+        <p className="rounded-lg border border-dashed border-line-strong bg-paper p-6 text-center text-muted">
           No pieces yet. Add the first thing you&apos;re playing above.
         </p>
       ) : (
         <>
           <div className="mb-3 flex items-center justify-end gap-2">
-            <label className="text-xs font-semibold uppercase tracking-wide text-stone-500">
+            <label className="text-xs font-semibold uppercase tracking-wide text-muted">
               Sort
             </label>
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as SortKey)}
-              className="rounded-md border border-stone-300 bg-white px-2 py-1 text-sm text-stone-700 outline-none focus:border-henle"
+              className="field px-2 py-1 text-sm text-muted"
             >
               {(Object.keys(SORT_LABELS) as SortKey[]).map((k) => (
                 <option key={k} value={k}>
@@ -280,12 +294,13 @@ function Repertoire() {
             </select>
           </div>
 
-          <div className="space-y-5">
+          <div className="space-y-6">
             {groups.map((g) => (
               <div key={g.label ?? "all"}>
                 {g.label && (
-                  <h3 className="mb-2 border-b border-stone-200 pb-1 font-serif text-sm uppercase tracking-wide text-henle">
+                  <h3 className="mb-2 flex items-center gap-3 font-serif text-sm uppercase tracking-[0.15em] text-henle">
                     {g.label}
+                    <span className="h-px flex-1 bg-line-strong" />
                   </h3>
                 )}
                 <ul className="space-y-3">
@@ -397,46 +412,46 @@ function RepertoireStats({ pieces }: { pieces: Piece[] }) {
     .slice(0, 3);
 
   return (
-    <section className="mb-6 rounded-lg border border-henle/30 bg-henle-light/50 p-4">
-      <h2 className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-henle">
+    <section className="mb-6 rounded-xl border border-henle/20 bg-henle-light/60 p-5">
+      <h2 className="mb-4 text-xs font-semibold uppercase tracking-[0.25em] text-henle">
         Repertoire at a glance
       </h2>
 
-      <div className="mb-4 grid grid-cols-4 gap-2 text-center">
+      <div className="mb-5 grid grid-cols-4 gap-2 text-center">
         <Stat n={total} label="Pieces" big />
         <Stat n={statusCounts.playing} label="Playing" />
         <Stat n={statusCounts.learning} label="Learning" />
         <Stat n={statusCounts.want} label="Want" />
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid gap-5 border-t border-henle/15 pt-4 sm:grid-cols-3">
         {/* Difficulty */}
         <div>
-          <h3 className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-stone-500">
+          <h3 className="mb-1.5 text-[11px] font-semibold uppercase tracking-wide text-muted">
             Difficulty (Henle)
           </h3>
           {avgHenle !== null ? (
-            <p className="text-sm text-stone-700">
+            <p className="text-sm text-ink">
               <span className="font-serif text-2xl text-henle">{avgHenle}</span>{" "}
               avg
-              <span className="ml-2 text-xs text-stone-500">
+              <span className="ml-2 text-xs text-muted">
                 range {minH}–{maxH}
               </span>
             </p>
           ) : (
-            <p className="text-sm text-stone-500">—</p>
+            <p className="text-sm text-muted">—</p>
           )}
         </div>
 
         {/* Eras */}
         <div>
-          <h3 className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-stone-500">
+          <h3 className="mb-1.5 text-[11px] font-semibold uppercase tracking-wide text-muted">
             By era
           </h3>
           <ul className="space-y-1">
             {eraCounts.map(({ era, n }) => (
               <li key={era} className="flex items-center gap-2 text-xs">
-                <span className="w-20 shrink-0 truncate text-stone-600">
+                <span className="w-20 shrink-0 truncate text-ink/80">
                   {era}
                 </span>
                 <span className="h-2 flex-1 overflow-hidden rounded-full bg-henle/10">
@@ -445,7 +460,7 @@ function RepertoireStats({ pieces }: { pieces: Piece[] }) {
                     style={{ width: `${(n / maxEra) * 100}%` }}
                   />
                 </span>
-                <span className="w-4 text-right text-stone-500">{n}</span>
+                <span className="w-4 text-right text-muted">{n}</span>
               </li>
             ))}
           </ul>
@@ -453,20 +468,20 @@ function RepertoireStats({ pieces }: { pieces: Piece[] }) {
 
         {/* Top composers */}
         <div>
-          <h3 className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-stone-500">
+          <h3 className="mb-1.5 text-[11px] font-semibold uppercase tracking-wide text-muted">
             Top composers
           </h3>
           {composerCounts.length ? (
-            <ul className="space-y-0.5 text-sm text-stone-700">
+            <ul className="space-y-0.5 text-sm text-ink">
               {composerCounts.map(([name, n]) => (
                 <li key={name} className="flex justify-between gap-2">
                   <span className="truncate">{name}</span>
-                  <span className="shrink-0 text-stone-500">{n}</span>
+                  <span className="shrink-0 text-muted">{n}</span>
                 </li>
               ))}
             </ul>
           ) : (
-            <p className="text-sm text-stone-500">—</p>
+            <p className="text-sm text-muted">—</p>
           )}
         </div>
       </div>
@@ -490,10 +505,31 @@ function Stat({
       >
         {n}
       </div>
-      <div className="text-[11px] uppercase tracking-wide text-stone-500">
+      <div className="text-[11px] uppercase tracking-wide text-muted">
         {label}
       </div>
     </div>
+  );
+}
+
+// A small henle badge used for status / difficulty chips.
+function Chip({
+  children,
+  tone = "soft",
+}: {
+  children: React.ReactNode;
+  tone?: "soft" | "solid";
+}) {
+  return (
+    <span
+      className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide ${
+        tone === "solid"
+          ? "bg-henle text-white"
+          : "bg-henle-light text-henle ring-1 ring-henle/15"
+      }`}
+    >
+      {children}
+    </span>
   );
 }
 
@@ -511,23 +547,34 @@ function PieceCard({
   const [open, setOpen] = useState(false);
 
   return (
-    <li className="rounded-lg border border-stone-200 bg-white p-4">
+    <li className="paper-card spine p-4 pl-5">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <h3 className="font-serif text-lg leading-snug text-stone-900">
+          <div className="mb-1 flex items-center gap-2">
+            <Chip>{STATUS_LABELS[piece.status]}</Chip>
+            <Chip>{henleLabel(piece.henle)}</Chip>
+          </div>
+          <h3 className="font-serif text-lg leading-snug text-ink">
             {piece.title}
           </h3>
-          <p className="text-sm text-stone-600">{piece.composer}</p>
-          <p className="mt-1 text-xs text-stone-500">
-            {piece.era} · {piece.form} · {henleLabel(piece.henle)}
-            {piece.yearLearned ? ` · Learned ${piece.yearLearned}` : ""}
+          <p className="text-sm font-medium text-henle/80">{piece.composer}</p>
+          <p className="mt-1 flex flex-wrap items-center text-xs text-muted">
+            {piece.era}
+            <Dot />
+            {piece.form}
+            {piece.yearLearned ? (
+              <>
+                <Dot />
+                Learned {piece.yearLearned}
+              </>
+            ) : null}
           </p>
         </div>
         <div className="flex shrink-0 items-center gap-2">
           <select
             value={piece.status}
             onChange={(e) => onStatus(piece.id, e.target.value as PieceStatus)}
-            className="rounded border border-stone-300 bg-white px-2 py-1 text-xs text-stone-700 outline-none focus:border-henle"
+            className="field px-2 py-1 text-xs text-muted"
           >
             {(Object.keys(STATUS_LABELS) as PieceStatus[]).map((s) => (
               <option key={s} value={s}>
@@ -542,17 +589,17 @@ function PieceCard({
           <button
             onClick={() => onRemove(piece.id)}
             aria-label="Remove piece"
-            className="rounded px-2 py-1 text-xs text-stone-400 hover:text-red-600"
+            className="rounded px-2 py-1 text-xs text-muted transition-colors hover:text-red-600"
           >
             ✕
           </button>
         </div>
       </div>
 
-      <div className="mt-3 flex items-center gap-4">
+      <div className="mt-3 flex items-center gap-4 border-t border-line pt-3">
         <button
           onClick={() => setOpen((o) => !o)}
-          className="text-sm font-medium text-henle hover:text-henle-dark"
+          className="text-sm font-medium text-henle transition-colors hover:text-henle-dark"
         >
           {open ? "Hide" : "Learn about this piece"}
         </button>
@@ -602,7 +649,7 @@ function YearField({
       inputMode="numeric"
       placeholder="Year"
       aria-label="Year learned"
-      className="w-16 rounded border border-stone-300 bg-white px-2 py-1 text-xs text-stone-700 outline-none focus:border-henle"
+      className="field w-16 px-2 py-1 text-xs text-muted"
     />
   );
 }
@@ -635,7 +682,7 @@ function DeepDivePanel({ pieceId }: { pieceId: string }) {
   }, [pieceId]);
 
   if (loading) {
-    return <p className="mt-3 text-sm text-stone-500">Reading up on it…</p>;
+    return <p className="mt-3 text-sm text-muted">Reading up on it…</p>;
   }
   if (error) {
     return (
@@ -650,12 +697,12 @@ function DeepDivePanel({ pieceId }: { pieceId: string }) {
   if (!dive) return null;
 
   return (
-    <div className="mt-3 space-y-3 border-t border-stone-100 pt-3 text-sm text-stone-700">
+    <div className="mt-3 space-y-3 rounded-lg border border-line bg-henle-light/40 p-4 text-sm text-ink">
       <Section title="The composer">{dive.composer}</Section>
       <Section title="This piece">{dive.pieceStory}</Section>
       <Section title="The form">{dive.formExplainer}</Section>
       <Section title="What to notice">
-        <ul className="list-disc space-y-1 pl-5">
+        <ul className="list-disc space-y-1 pl-5 marker:text-henle/50">
           {dive.theoryTidbits.map((t, i) => (
             <li key={i}>{t}</li>
           ))}
@@ -664,7 +711,7 @@ function DeepDivePanel({ pieceId }: { pieceId: string }) {
       <Section title="Listen for">{dive.listenFor}</Section>
       <button
         onClick={() => load(true)}
-        className="text-xs text-stone-400 hover:text-henle"
+        className="text-xs text-muted transition-colors hover:text-henle"
       >
         ↻ Regenerate
       </button>
@@ -684,7 +731,7 @@ function Section({
       <h4 className="mb-1 text-xs font-semibold uppercase tracking-wide text-henle">
         {title}
       </h4>
-      <div className="leading-relaxed">{children}</div>
+      <div className="leading-relaxed text-ink/90">{children}</div>
     </div>
   );
 }
@@ -766,7 +813,7 @@ function Recommend() {
       {/* Controls */}
       <div className="mb-5 flex flex-wrap items-center justify-center gap-x-6 gap-y-3">
         <div className="flex items-center gap-2">
-          <span className="text-xs font-semibold uppercase tracking-wide text-stone-500">
+          <span className="text-xs font-semibold uppercase tracking-wide text-muted">
             Mode
           </span>
           <div className="flex overflow-hidden rounded-full border border-henle">
@@ -779,7 +826,7 @@ function Recommend() {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-xs font-semibold uppercase tracking-wide text-stone-500">
+          <span className="text-xs font-semibold uppercase tracking-wide text-muted">
             Push
           </span>
           <div className="flex gap-1">
@@ -790,7 +837,7 @@ function Recommend() {
                 className={`rounded-md border px-2.5 py-1 text-xs transition-colors ${
                   stretch === s
                     ? "border-henle bg-henle-light text-henle"
-                    : "border-stone-300 text-stone-600 hover:border-stone-400"
+                    : "border-line-strong text-muted hover:border-henle/40 hover:text-henle"
                 }`}
               >
                 {STRETCH_LABELS[s]}
@@ -801,7 +848,7 @@ function Recommend() {
       </div>
 
       {/* The cabinet */}
-      <div className="rounded-2xl border-4 border-henle bg-gradient-to-b from-henle-mid to-henle p-4 shadow-lg">
+      <div className="rounded-2xl border-4 border-henle bg-gradient-to-b from-henle-mid to-henle p-4 shadow-lg ring-1 ring-henle-dark/30">
         <div className="mb-3 text-center">
           <span className="font-serif text-sm uppercase tracking-[0.3em] text-white/80">
             Repertoire Machine
@@ -853,7 +900,7 @@ function Recommend() {
       {recs.length > 0 && landed[recs.length - 1] && (
         <div className="mt-5 space-y-3">
           {mode === "lucky" && (
-            <p className="text-center text-sm italic text-stone-500">
+            <p className="text-center text-sm italic text-muted">
               Outside your usual comfort zone — on purpose.
             </p>
           )}
@@ -920,26 +967,27 @@ function RecCard({ rec }: { rec: Recommendation }) {
   }
 
   return (
-    <div className="rounded-lg border border-stone-200 bg-white p-4">
-      <h3 className="font-serif text-lg text-stone-900">{rec.title}</h3>
-      <p className="text-sm text-stone-600">{rec.composer}</p>
-      <p className="mt-1 text-xs text-stone-500">
-        {rec.era} · {henleLabel(rec.henle)}
-      </p>
-      <p className="mt-3 text-sm text-stone-700">
+    <div className="paper-card spine p-4 pl-5">
+      <div className="mb-1 flex items-center gap-2">
+        <Chip>{rec.era}</Chip>
+        <Chip>{henleLabel(rec.henle)}</Chip>
+      </div>
+      <h3 className="font-serif text-lg text-ink">{rec.title}</h3>
+      <p className="text-sm font-medium text-henle/80">{rec.composer}</p>
+      <p className="mt-3 text-sm text-ink">
         <span className="font-semibold text-henle">Why this: </span>
         {rec.why}
       </p>
-      <p className="mt-2 text-sm text-stone-700">
+      <p className="mt-2 text-sm text-ink">
         <span className="font-semibold text-henle">New challenge: </span>
         {rec.newChallenge}
       </p>
-      <div className="mt-3 flex flex-wrap items-center gap-4">
+      <div className="mt-3 flex flex-wrap items-center gap-4 border-t border-line pt-3">
         <ListenLink title={rec.title} composer={rec.composer} />
         <button
           onClick={getMoreInfo}
           disabled={detailState === "loading"}
-          className="text-sm font-medium text-henle hover:text-henle-dark"
+          className="text-sm font-medium text-henle transition-colors hover:text-henle-dark"
         >
           {detailState === "loading"
             ? "Loading…"
@@ -950,9 +998,9 @@ function RecCard({ rec }: { rec: Recommendation }) {
         <button
           onClick={addToWant}
           disabled={state !== "idle"}
-          className={`text-sm font-medium ${
+          className={`text-sm font-medium transition-colors ${
             state === "added"
-              ? "text-stone-400"
+              ? "text-muted"
               : "text-henle hover:text-henle-dark"
           }`}
         >
@@ -968,7 +1016,7 @@ function RecCard({ rec }: { rec: Recommendation }) {
         <p className="mt-2 text-sm text-red-600">Couldn&apos;t load more info.</p>
       )}
       {detail && (
-        <div className="mt-3 space-y-3 border-t border-stone-100 pt-3 text-sm text-stone-700">
+        <div className="mt-3 space-y-3 rounded-lg border border-line bg-henle-light/40 p-4 text-sm text-ink">
           <Section title="Why it fits you">{detail.fit}</Section>
           <Section title="The challenge">{detail.challenge}</Section>
           <Section title="How to approach it">{detail.approach}</Section>
@@ -991,7 +1039,7 @@ function ModePill({
     <button
       onClick={onClick}
       className={`px-3 py-1 text-xs font-medium transition-colors ${
-        active ? "bg-henle text-white" : "bg-white text-henle hover:bg-henle-light"
+        active ? "bg-henle text-white" : "bg-paper text-henle hover:bg-henle-light"
       }`}
     >
       {children}
@@ -1007,7 +1055,7 @@ function Reel({
   rec?: Recommendation;
 }) {
   return (
-    <div className="relative h-28 overflow-hidden rounded-md border-2 border-henle bg-white">
+    <div className="relative h-28 overflow-hidden rounded-md border-2 border-henle bg-paper">
       {spinning ? (
         <div className="reel-strip flex flex-col">
           {[...REEL_GLYPHS, ...REEL_GLYPHS].map((g, i) => (
@@ -1024,12 +1072,12 @@ function Reel({
           <span className="font-serif text-lg leading-tight text-henle">
             {surname(rec.composer)}
           </span>
-          <span className="mt-1 rounded-full bg-henle-light px-2 py-0.5 text-[10px] font-medium text-henle">
+          <span className="mt-1 rounded-full bg-henle-light px-2 py-0.5 text-[10px] font-medium text-henle ring-1 ring-henle/15">
             {henleLabel(rec.henle)}
           </span>
         </div>
       ) : (
-        <div className="flex h-full items-center justify-center text-4xl text-stone-200">
+        <div className="flex h-full items-center justify-center text-4xl text-henle/15">
           ♪
         </div>
       )}

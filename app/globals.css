@@ -9,12 +9,61 @@
   --color-henle-dark: #0e264d;
   --color-henle-mid: #2a4d8f;
   --color-henle-light: #e8eef7;
+
+  /* Surfaces & ink, all keyed to the blue so nothing reads as flat gray. */
+  --color-ivory: #f4f1ea; /* page paper */
+  --color-paper: #fbfaf6; /* raised card paper */
+  --color-ink: #1b2436; /* blue-black body text */
+  --color-muted: #5d6577; /* blue-gray secondary text */
+  --color-line: #c2c9d8; /* visible slate-blue hairline for card edges */
+  --color-line-strong: #9aa3bd; /* stronger outline for inputs/fields */
 }
 
 body {
-  /* Ivory edition paper. */
-  background: #f4f1ea;
-  color: #1c1917;
+  /* Ivory edition paper with the faintest blue wash so it never looks stark. */
+  background:
+    radial-gradient(120% 80% at 50% -10%, #eef1f7 0%, transparent 60%),
+    var(--color-ivory);
+  color: var(--color-ink);
+}
+
+/* Card paper used across repertoire + recommendation surfaces. */
+.paper-card {
+  background: var(--color-paper);
+  border: 1px solid var(--color-line-strong);
+  border-radius: 0.625rem;
+  box-shadow: 0 1px 2px #14346b0f;
+  transition:
+    box-shadow 0.18s ease,
+    border-color 0.18s ease;
+}
+.paper-card:hover {
+  border-color: var(--color-henle);
+  box-shadow: 0 4px 14px #14346b14;
+}
+
+/* A book-spine accent on the left edge — the "edition" feel. */
+.spine {
+  border-left: 3px solid color-mix(in srgb, var(--color-henle) 70%, transparent);
+}
+
+/* Shared form-field look: ivory-paper field, henle focus ring. */
+.field {
+  background: #ffffff;
+  border: 1.5px solid var(--color-line-strong);
+  border-radius: 0.5rem;
+  color: var(--color-ink);
+  outline: none;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+.field:hover {
+  border-color: #7c87a6;
+}
+.field:focus {
+  border-color: var(--color-henle);
+  box-shadow: 0 0 0 3px #14346b1f;
 }
 
 /* Slot-machine reel spin: a strip of glyphs scrolling vertically. The strip
